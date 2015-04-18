@@ -1,0 +1,105 @@
+extends layout
+
+block content
+	div.container
+		div.row
+			div.col-sm-6.col-md-6.col-md-offset-3
+				#user
+					h1.text-center.login-title Welcome #{user.role} #{user.firstName} #{user.lastName}. Check your details below:
+						div.signup-wall
+							table.table
+								thead
+									tr
+										td Username
+										td Email
+										td Role
+										td 学生ID
+									tr
+										td #{user.username}
+										td #{user.email}
+										td #{user.role}
+										td #{user.schoolId}
+							h3 现在时间 #{date}
+							a.btn.btn-primary(href='/signout') signout
+
+				- var k = false;
+				if user.role == "teacher"
+					- k = true;
+		hr
+		h2 所有作业要求
+		if k
+			a.btn.btn-primary(href='/addHw') 添加作业
+		table.table-hover.table
+			thead
+				tr
+						td 作业名称
+						td 作业描述
+						td 截止时间
+						if k
+							td 修改作业
+			tbody
+				- for (var c = 0;c<courses.length;c++){
+					tr
+						td #{courses[c].CourseName}
+						td #{courses[c].describe}
+						td #{courses[c].deadline}
+						if k
+							td
+								a.btn.btn-primary(href='/modify?id=#{courses[c]._id}') 修改作业
+				- }
+
+		if k
+			hr
+			h2 已提交作业学生名单
+
+			table.table-hover.table
+				thead
+					tr
+						td 学生ID
+						td 学生姓名
+						td 项目名称
+						td 提交时间
+						td 查看作业
+						td 作业评分
+
+				tbody
+					- for (var c = 0;c<uploads.length;c++){
+						tr
+							td #{uploads[c].schoolId}
+							td #{uploads[c].student}
+							td #{uploads[c].course}
+							td #{uploads[c].uploadDate}
+							td
+							if uploads[c].score
+								td #{uploads[c].score}
+							else
+								if uploads[c].timeout
+									td
+										form(class='form-inline', action='/score?uploadId=#{uploads[c]._id}', method='POST')
+											input.form-control(type="text",name="score")
+											button(class='btn btn-lg btn-primary btn-block', type='submit') 评分
+								else
+									td 还没到达评分时间
+					-}
+
+		else
+			hr
+			h2 您已提交的作业
+			a.btn.btn-primary(href='/upload?id=#{user._id}') 提交作业
+			table.table-hover.table
+				thead
+					tr
+						td 学生ID
+						td 学生姓名
+						td 项目名称
+						td 提交时间
+						td 作业评分
+				tbody
+					- for (var c = 0;c<uploads.length;c++){
+						tr
+							td #{uploads[c].schoolId}
+							td #{uploads[c].student}
+							td #{uploads[c].course}
+							td #{uploads[c].uploadDate}
+							td #{uploads[c].score}
+					-}

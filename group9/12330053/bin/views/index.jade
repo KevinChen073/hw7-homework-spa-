@@ -1,0 +1,111 @@
+extends layout
+
+block content
+	div.row
+			#index.col-sm-6.col-md-4.col-md-offset-4
+				div.account-wall
+					h1.text-center.login-title Sign in to our Passport app
+					br
+					img(class='profile-img', src='/assert/doggy.png')
+					form(class='form-signin', method='POST')
+						input(type='text', data-bind="value:username" class='form-control', placeholder='Username',required, autofocus)
+						input(type='password', data-bind="value:pwd" class='form-control', placeholder='Password', required)
+						button(class='btn btn-lg btn-primary btn-block', type='submit' data-bind="click:signin") Sign in
+						span.clearfix
+					a(class='text-center new-account',data-bind="click:register") Create an account
+			#add.col-sm-8.col-md-8.col-md-offset-2
+				div.page-container
+					h1.text-center.login-title 新建课程
+						button.btn.btn-primary.pull-right(data-bind="click:closeAdd") 关闭
+						div.signup-wall
+							form(method='POST')
+								input(type='text', data-bind='value:regC_courseName', class='form-control', placeholder='CourseName',required, autofocus)
+								textarea(type='textarea',rows='5', data-bind='value:regC_describe', class='form-control', placeholder='Describe', required)
+								input(type='date', data-bind='value:regC_deadline', class='form-control',required)
+								button(class='btn btn-lg btn-primary btn-block',type="submit",data-bind="click:postRegister") 确认新建
+			#msg.col-sm-8.col-md-8.col-md-offset-2
+				div.page-container
+					h1#message
+			#upload.col-sm-6.col-md-4.col-md-offset-4
+				div.page-container
+					h1.text-center.login-title 上交作业
+						button.btn.btn-primary.pull-right(data-bind="click:closeUpload") 关闭
+						div.signup-wall
+							form(class='form-signin', method='POST')
+								input(type='text', data-bind='value:upload_schoolId', class='form-control', placeholder='SchoolID',required,value="#{schoolId}")
+								input(type='text', data-bind='value:upload_student', class='form-control', placeholder='name',required,value="#{student}")
+								select(data-bind="value:upload_course",id="select",class="form-control")
+									option 请选择课程
+									//- for (var c = 0;c<courses.length-1;c++){
+										option #{courses[c].CourseName}
+									//-}
+								textarea(data-bind='value:upload_homework', class='form-control', placeholder='提交作业',rows="10",required)
+								.form-control
+								button(class='btn btn-lg btn-primary btn-block', type='submit',data-bind="click:postUpload") 提交课程
+			#register.col-sm-6.col-md-4.col-md-offset-4
+				h1.text-center.login-title Registration Details
+					div.signup-wall
+						form(class='form-signin', method='POST')
+							input(type='text', name='username', class='form-control', placeholder='Username',required, autofocus)
+							input(type='text', name='schoolId', class='form-control', placeholder='ShcoolId',required)
+							input(type='password', name='password', class='form-control nomargin', placeholder='Password', required)
+							input(type='email', name='email', class='form-control', placeholder='Email',required)
+							input(type='text', name='firstName', class='form-control', placeholder='First Name',required)
+							input(type='text', name='lastName', class='form-control', placeholder='Last Name',required)
+							.form-control
+								label 学生
+									input(type="radio",autocomplete="off",name="role",value="student")
+								label 教师
+									input(type="radio",autocomplete="off",name="role",value="teacher",checked)
+							button(class='btn btn-lg btn-primary btn-block', data-bind="click:finishRegister") Register
+							span.clearfix
+							<div class="btn-group" data-toggle="buttons">
+			#home.col-sm-6.col-md-6.col-md-offset-3
+				#user
+					h1.text-center.login-title Welcome <span data-bind="text:fullName"></span> Check your details below:
+						div.signup-wall
+							table.table
+								thead
+									tr
+										td Username
+										td Email
+										td Role
+										td 学生ID
+									tr
+										td  <span data-bind="text:curUser().username"></span>
+										td  <span data-bind="text:curUser().email"></span>
+										td  <span data-bind="text:curUser().role"></span>
+										td  <span data-bind="text:curUser().schoolId"></span>
+							h3 现在时间
+								<span data-bind="text:home_date">
+							a.btn.btn-primary(href='/signout',data-bind="click:signout") signout
+					hr
+					h2 所有作业要求
+					div
+						a.teacherPage.btn.btn-primary(data-bind="click:addPage") 添加作业
+						table#courseList.table-hover.table
+							thead
+								tr
+										td 作业名称
+										td 作业描述
+										td 截止时间
+										td 修改作业要求
+							tbody
+
+					hr
+					h2.teacherPage 已提交作业学生名单
+					h2.studentPage 您已提交的作业
+					div
+						a.studentPage.btn.btn-primary(data-bind='click:uploadPage') 提交作业
+						table#uploadList.table-hover.table
+							thead
+								tr
+									td 学生ID
+									td 学生姓名
+									td 项目名称
+									td 提交时间
+									td 查看作业
+									td 作业评分
+							tbody
+
+	script(type='text/javascript',src='/js/mine.js')

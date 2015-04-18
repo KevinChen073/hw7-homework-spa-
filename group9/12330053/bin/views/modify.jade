@@ -1,0 +1,14 @@
+extends layout
+
+block content
+	div.container
+			div.row
+				div.col-sm-6.col-md-6.col-md-offset-3
+					h1.text-center.login-title 修改课程
+						div.signup-wall
+							form(action='/modifyCourse?id=#{course._id}', method='POST')
+								input(type='text', name='CourseName', class='form-control', placeholder='CourseName',required, autofocus,value="#{course.CourseName}")
+								textarea(type='textarea',rows='5', name='describe', class='form-control', placeholder='Describe', required) #{course.describe}
+								input(type='date', name='deadline', class='form-control',required,value="#{course.deadline}")
+								button(class='btn btn-lg btn-primary btn-block', type='submit') 确认修改
+

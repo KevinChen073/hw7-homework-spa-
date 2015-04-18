@@ -1,0 +1,25 @@
+extends layout
+
+block content
+	div.container
+		div.row
+			div.col-sm-6.col-md-4.col-md-offset-4
+				h1.text-center.login-title Registration Details
+					div.signup-wall
+						form(class='form-signin', action='/uploadHw', method='POST')
+							input(type='text', name='schoolId', class='form-control', placeholder='SchoolID',required,value="#{schoolId}")
+							input(type='text', name='student', class='form-control', placeholder='name',required,value="#{student}")
+							select(name="course",class="form-control")
+								option 请选择课程
+								- for (var c = 0;c<courses.length-1;c++){
+									option #{courses[c].CourseName}
+								-}
+							textarea(name='homework', class='form-control', placeholder='提交作业',rows="10",required)
+							.form-control
+							button(class='btn btn-lg btn-primary btn-block', type='submit') 提交课程
+							span.clearfix
+					#message
+						if message
+							h1.text-center.error-message #{message}
+
+							<div class="btn-group" data-toggle="buttons">
