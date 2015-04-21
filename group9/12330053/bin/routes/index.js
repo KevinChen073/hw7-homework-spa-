@@ -23,10 +23,9 @@ module.exports = function(passport){
 		res.render('index', { message: req.flash('message') });
 	});
 
-	/* GET add homework page. */
-	router.get('/addHw', function(req, res) {
+	router.get('/signup', function(req, res) {
     	// Display the Login page with any flash message, if any
-		res.render('add', { message: req.flash('add') });
+		res.json({ message: req });
 	});
 
 	router.post('/score', function(req, res) {
@@ -44,27 +43,14 @@ module.exports = function(passport){
 	});
 
 
-	router.get('/upload', function(req, res) {
-    	// Display the Login page with any flash message, if any
-    	console.log(req.query.id);
-		User.findOne({"_id":req.query.id}).exec(function(err,doc){
-	    	Course.find().exec(function(err,docs){
-				console.log(doc);
-				res.render('upload', {
-					courses:docs,
-	    			schoolId:doc.schoolId,
-	    			student:doc.username
-	    		});
-	    	});
-    	});
-	});
+
 	router.get('/modify', function(req, res) {
     	// Display the Login page with any flash message, if any
     	var curId = req.query.id;
 	    	Course.findOne({"_id":curId}).exec(function(err,doc){
 	    		res.render('modify', {
 	    			message: req.flash('modify'),
-	    			course:doc,
+	    			course:doc
 	    		});
 	    });
 	});
@@ -73,6 +59,13 @@ module.exports = function(passport){
 	router.post('/login', passport.authenticate('login', {
 		successRedirect: '/home',
 		failureRedirect: '/',
+		failureFlash : true
+	}));
+
+	/* Handle Registration POST */
+	router.post('/signup', passport.authenticate('signup', {
+		successRedirect: '/home',
+		failureRedirect: '/signup',
 		failureFlash : true
 	}));
 
@@ -87,12 +80,10 @@ module.exports = function(passport){
 		newCourse.describe = describe;
         newCourse.save(function(err) {
             if (err){
-                console.log('Error in Saving user: '+err);
-                throw err;
+                res.json({msg:"注册失败"});
             }
-            console.log('User Registration succesful');
+            res.json({msg:"完成注册"});
         });
-		res.redirect('/home');
 	});
 
 	router.post('/modifyCourse',function(req,res){
@@ -111,7 +102,7 @@ module.exports = function(passport){
 		res.redirect('/home');
 	});
 
-	router.post('/uploadHw',function(req,res){
+	router.post('/upload',function(req,res){
 		var curDate = new Date();
 		var newUpload = new Upload();
 		Course.findOne({CourseName:req.body.course}).exec(function(err,doc){
@@ -121,29 +112,22 @@ module.exports = function(passport){
 			newUpload.student = req.body.student;
 			newUpload.course = req.body.course;
 			newUpload.homework = req.body.homework;
-			newUpload.save();
-			res.redirect('/home');
+			newUpload.save(function(err) {
+	            if (err){
+	                res.json({msg:"上交失败"});
+	            }
+	            res.json({msg:"完成上传作业"});
+	        });
 		});
 
 	});
 
-	/* GET Registration Page */
-	router.get('/signup', function(req, res){
-		res.render('register',{message: req.flash('message')});
-	});
 
-	/* Handle Registration POST */
-	router.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/home',
-		failureRedirect: '/signup',
-		failureFlash : true
-	}));
 
 	/* GET Home Page */
 	router.get('/home', isAuthenticated, function(req, res){
 		var curDate = Date.now();
 		var cDate = new Date();
-
 		Course.find().exec(function(err,docs){
 			Upload.find().exec(function(err,docs2){
 				//对每个docs进行检查是否已经过deadline，如果是，则timeout = true
@@ -158,11 +142,11 @@ module.exports = function(passport){
 					}
 					//console.log(docs2[k].timeout);
 				}
-				res.render('home', {
+				res.json({
 					user: req.user,
 					courses:docs,
 					uploads:docs2,
-					date:cDate
+					date:cDate,
 				});
 			});
 		});

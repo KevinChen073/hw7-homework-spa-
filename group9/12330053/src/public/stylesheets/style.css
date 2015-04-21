@@ -86,3 +86,14 @@ h1.error-message{
 ul.user-details{
     list-style: none;
 }
+.page-container{
+    border:1px,solid;
+    background-color: rgba(220,220,220,1);
+    border-radius: 15px;
+    padding:10px;
+}
+
+#add,#upload,#msg{
+    position: fixed;
+    z-index: 3;
+}
