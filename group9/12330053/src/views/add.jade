@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	div.container
+			div.row
+				div.col-sm-6.col-md-6.col-md-offset-3
+					h1.text-center.login-title 新建课程
+						div.signup-wall
+							form(action='/registerCourse', method='POST')
+								input(type='text', name='CourseName', class='form-control', placeholder='CourseName',required, autofocus)
+								textarea(type='textarea',rows='5', name='describe', class='form-control', placeholder='Describe', required)
+								input(type='date', name='deadline', class='form-control',required)
+								button(class='btn btn-lg btn-primary btn-block', type='submit') 确认新建

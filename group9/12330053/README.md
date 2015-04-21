@@ -20,7 +20,4 @@ deadline：老师可以设定修改作业要求的截止时间，截止时间到
 #技术搭建
 基于B\S架构的多页应用
 后端：NodeJS+MonogoDB
-前端：KnockJs+Bootstrap+jQuery
 Node Package:见package.json
-
-
